@@ -1,9 +1,9 @@
-# Simple E-Commerce Website Example
+# Simple E-Commerce Website Spring Boot Backend Example
 
 This is an example of an E-Commerce website backend. This is one of the backends that this E-Commerce project uses.
 
 ### Full Project Tech Stack
-* Spring Boot (Backend only)
+* Spring Boot (Backend only) (This one)
 * Django (Backend only)
 * Next.js (Frontend only)
 
