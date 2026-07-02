@@ -18,9 +18,9 @@ import java.util.Map;
 @RestController("RetailersController")
 @RequestMapping("/retailers")
 public class RetailersController {
+    private final RetailersService retailersService;
     @Value("${stripe.webhook.secret}")
     private String webhookSecret;
-    private final RetailersService retailersService;
 
     public RetailersController(RetailersService retailersService) {
         this.retailersService = retailersService;
