@@ -7,4 +7,4 @@ This is an example of an E-Commerce website backend. This is one of the backends
 * Django (Backend only)
 * Next.js (Frontend only)
 
-This is the main tech stack that this E-Commerce platform uses, however we also use technologies such as --Stripe-- and --Google Cloud--. Feel free to download this repository to check out how it works.
+This is the main tech stack that this E-Commerce platform uses, however we also use technologies such as Stripe and Google Cloud. Feel free to download this repository to check out how it works.
