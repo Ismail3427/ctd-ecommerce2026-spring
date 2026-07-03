@@ -26,6 +26,6 @@ public class ProductModel {
     private int priceInCents;
 
     @ManyToOne()
-    @JoinColumn(name = "user_id")
+    @JoinColumn()
     private RetailersModel owner;
 }
