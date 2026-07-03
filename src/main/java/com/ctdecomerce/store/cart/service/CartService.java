@@ -30,6 +30,8 @@ public class CartService {
 
     @Transactional
     public CartModel addToCart(AddToCart addToCart) {
+        System.out.println(addToCart.getCart());
+        System.out.println(addToCart.getUserId());
         System.out.println(addToCart.getProduct());
         ProductModel product = productRepo.findById(UUID.fromString(addToCart.getProduct())).orElse(null);
         try {
