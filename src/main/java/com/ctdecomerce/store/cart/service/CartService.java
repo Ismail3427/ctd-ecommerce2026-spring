@@ -8,6 +8,7 @@ import com.ctdecomerce.store.product.model.ProductModel;
 import com.ctdecomerce.store.product.repository.ProductRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import java.lang.IllegalArgumentException;
 
 import java.util.UUID;
 
@@ -16,7 +17,7 @@ public class CartService {
     private final CartRepo cartRepo;
     private final ProductRepo productRepo;
 
-    public CartService (CartRepo cartRepo, ProductRepo productRepo) {
+    public CartService(CartRepo cartRepo, ProductRepo productRepo) {
         this.cartRepo = cartRepo;
         this.productRepo = productRepo;
     }
@@ -30,19 +31,56 @@ public class CartService {
 
     @Transactional
     public CartModel addToCart(AddToCart addToCart) {
-        System.out.println(addToCart.getCart());
-        System.out.println(addToCart.getUserId());
-        System.out.println(addToCart.getProduct());
-        ProductModel product = productRepo.findById(UUID.fromString(addToCart.getProduct())).orElse(null);
-        try {
-            CartModel cart = cartRepo.findById(UUID.fromString(addToCart.getCart())).orElse(null);
-            assert cart != null;
-            cart.getProducts().add(product);
-            return cartRepo.save(cart);
-        } catch (NullPointerException e) {
-            CartModel newCart = createCart(new CreateCart(addToCart.getUserId()));
-            newCart.getProducts().add(product);
-            return cartRepo.save(newCart);
+        ProductModel product = null;
+        if (addToCart.getProduct() != null && !addToCart.getProduct().isBlank()) {
+            try {
+                product = productRepo.findById(UUID.fromString(addToCart.getProduct())).orElse(null);
+            } catch (IllegalArgumentException ignored) {
+                product = null;
+            }
         }
+
+        if (addToCart.getCart() != null && !addToCart.getCart().isBlank()) {
+            CartModel cartById = null;
+            try {
+                cartById = cartRepo.findById(UUID.fromString(addToCart.getCart())).orElse(null);
+            } catch (IllegalArgumentException ignored) {
+                cartById = null;
+            }
+
+            if (cartById != null) {
+                if (cartById.getProducts() == null) {
+                    cartById.setProducts(new java.util.ArrayList<>());
+                }
+                if (product != null) {
+                    cartById.getProducts().add(product);
+                }
+                return cartRepo.save(cartById);
+            }
+        }
+
+        CartModel userCart = null;
+        if (addToCart.getUserId() != null && !addToCart.getUserId().isBlank()) {
+            userCart = cartRepo.findByUserId(addToCart.getUserId());
+        }
+
+        if (userCart != null) {
+            if (userCart.getProducts() == null) {
+                userCart.setProducts(new java.util.ArrayList<>());
+            }
+            if (product != null) {
+                userCart.getProducts().add(product);
+            }
+            return cartRepo.save(userCart);
+        }
+
+        CartModel newCart = createCart(new CreateCart(addToCart.getUserId()));
+        if (newCart.getProducts() == null) {
+            newCart.setProducts(new java.util.ArrayList<>());
+        }
+        if (product != null) {
+            newCart.getProducts().add(product);
+        }
+        return cartRepo.save(newCart);
     }
 }
