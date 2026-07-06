@@ -19,6 +19,6 @@ public class CartModel {
     @Column()
     private String productId;
 
-    @Column(unique = true)
+    @Column()
     private String userId;
 }

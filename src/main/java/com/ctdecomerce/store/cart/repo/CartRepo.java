@@ -7,5 +7,5 @@ import java.util.List;
 import java.util.UUID;
 
 public interface CartRepo extends JpaRepository<CartModel, UUID> {
-    List<CartModel> findCartMOdelByUserId(String userId);
+    List<CartModel> findCartModelsByUserId(String userId);
 }
