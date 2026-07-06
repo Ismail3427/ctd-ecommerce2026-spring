@@ -9,5 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class AddToCart {
-    
+    private String productId;
+    private String userId;
 }
