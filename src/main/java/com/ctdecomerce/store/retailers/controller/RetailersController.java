@@ -10,7 +10,6 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Account;
 import com.stripe.model.Event;
 import com.stripe.net.Webhook;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
