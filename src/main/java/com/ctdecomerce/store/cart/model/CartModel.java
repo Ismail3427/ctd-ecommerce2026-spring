@@ -1,5 +1,6 @@
 package com.ctdecomerce.store.cart.model;
 
+import com.ctdecomerce.store.product.model.ProductModel;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,8 +18,12 @@ public class CartModel {
     private UUID id;
 
     @Column()
-    private String productId;
+    private String userId;
 
     @Column()
-    private String userId;
+    private int quantity = 1;
+
+    @ManyToOne()
+    @JoinColumn()
+    private ProductModel product;
 }

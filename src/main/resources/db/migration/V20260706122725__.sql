@@ -1,4 +1,10 @@
-CREATE SEQUENCE IF NOT EXISTS revinfo_seq START WITH 1 INCREMENT BY 50;
+CREATE TABLE cart
+(
+    id         UUID NOT NULL,
+    user_id    VARCHAR(255),
+    product_id UUID,
+    CONSTRAINT pk_cart PRIMARY KEY (id)
+);
 
 CREATE TABLE products
 (
@@ -6,7 +12,7 @@ CREATE TABLE products
     name           VARCHAR(255),
     description    VARCHAR(255),
     price_in_cents INTEGER,
-    user_id        UUID,
+    owner_id       UUID,
     CONSTRAINT pk_products PRIMARY KEY (id)
 );
 
@@ -39,8 +45,11 @@ ALTER TABLE retailers
 ALTER TABLE retailers
     ADD CONSTRAINT uc_retailers_userid UNIQUE (user_id);
 
+ALTER TABLE cart
+    ADD CONSTRAINT FK_CART_ON_PRODUCT FOREIGN KEY (product_id) REFERENCES products (id);
+
 ALTER TABLE products
-    ADD CONSTRAINT FK_PRODUCTS_ON_USER FOREIGN KEY (user_id) REFERENCES retailers (id);
+    ADD CONSTRAINT FK_PRODUCTS_ON_OWNER FOREIGN KEY (owner_id) REFERENCES retailers (id);
 
 ALTER TABLE revchanges
     ADD CONSTRAINT fk_revchanges_on_default_tracking_modified_entities_changelog FOREIGN KEY (rev) REFERENCES revinfo (rev);

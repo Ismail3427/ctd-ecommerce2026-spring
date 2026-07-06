@@ -4,24 +4,32 @@ import com.ctdecomerce.store.cart.dto.AddToCart;
 import com.ctdecomerce.store.cart.dto.UserIdRequest;
 import com.ctdecomerce.store.cart.model.CartModel;
 import com.ctdecomerce.store.cart.repo.CartRepo;
+import com.ctdecomerce.store.product.model.ProductModel;
+import com.ctdecomerce.store.product.repository.ProductRepo;
+import com.stripe.model.Product;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class CartService {
     private final CartRepo cartRepo;
+    private final ProductRepo productRepo;
 
-    public CartService(CartRepo cartRepo) {
+    public CartService(CartRepo cartRepo, ProductRepo productRepo) {
         this.cartRepo = cartRepo;
+        this.productRepo = productRepo;
     }
 
     @Transactional
     public CartModel addToCart(AddToCart addToCart) {
         CartModel cart = new CartModel();
         cart.setUserId(addToCart.getUserId());
-        cart.setProductId(addToCart.getProductId());
+        ProductModel product = productRepo.findById(UUID.fromString(addToCart.getProductId())).orElse(null);
+        System.out.println(product);
+        cart.setProduct(product);
         return cartRepo.save(cart);
     }
 
