@@ -1,6 +1,7 @@
 package com.ctdecomerce.store.cart.service;
 
 import com.ctdecomerce.store.cart.dto.AddToCart;
+import com.ctdecomerce.store.cart.dto.UpdateQuantityRequest;
 import com.ctdecomerce.store.cart.dto.UserIdRequest;
 import com.ctdecomerce.store.cart.model.CartModel;
 import com.ctdecomerce.store.cart.repo.CartRepo;
@@ -37,4 +38,23 @@ public class CartService {
     public List<CartModel> getCart(UserIdRequest userIdRequest) {
         return cartRepo.findCartModelsByUserId(userIdRequest.getUserId());
     }
+
+    @Transactional
+    public CartModel incrementQuantity(UpdateQuantityRequest request) {
+        CartModel cart = cartRepo.findById(UUID.fromString(request.getCartId()))
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
+        cart.setQuantity(cart.getQuantity() + 1);
+        return cartRepo.save(cart);
+    }
+
+    @Transactional
+    public CartModel decrementQuantity(UpdateQuantityRequest request) {
+        CartModel cart = cartRepo.findById(UUID.fromString(request.getCartId()))
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
+        if (cart.getQuantity() > 1) {
+            cart.setQuantity(cart.getQuantity() - 1);
+        }
+        return cartRepo.save(cart);
+    }
+
 }
