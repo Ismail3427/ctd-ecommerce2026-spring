@@ -7,6 +7,8 @@ import com.ctdecomerce.store.product.model.ProductModel;
 import com.ctdecomerce.store.retailers.dto.ConnectedAccountDTO;
 import com.ctdecomerce.store.retailers.dto.ConnectedAccountRequest;
 import com.ctdecomerce.store.retailers.service.RetailersService;
+import com.ctdecomerce.store.user.model.UserModel;
+import com.ctdecomerce.store.user.repository.UserRepo;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Account;
@@ -29,12 +31,14 @@ import java.util.UUID;
 public class RetailersController {
     private final RetailersService retailersService;
     private final CartRepo cartRepo;
+    private final UserRepo userRepo;
     @Value("${stripe.webhook.secret}")
     private String webhookSecret;
 
-    public RetailersController(RetailersService retailersService, CartRepo cartRepo) {
+    public RetailersController(RetailersService retailersService, CartRepo cartRepo, UserRepo userRepo) {
         this.retailersService = retailersService;
         this.cartRepo = cartRepo;
+        this.userRepo = userRepo;
     }
 
     @PostMapping("/create")
@@ -68,7 +72,8 @@ public class RetailersController {
                 StripeObject stripeObject = dataObjectDeserializer.getObject().get();
                 Session session = (Session) stripeObject;
                 Map<String, String> metadata = session.getMetadata();
-                List<CartModel> carts = cartRepo.findCartModelsByUserId(metadata.get("userId"));
+                UserModel user = userRepo.findUserModelByUserId(metadata.get("userId"));
+                List<CartModel> carts = cartRepo.findCartModelsByUserId(user);
                 cartRepo.deleteAll(carts);
                 return ResponseEntity.status(HttpStatus.OK).body("Complete");
             } else {

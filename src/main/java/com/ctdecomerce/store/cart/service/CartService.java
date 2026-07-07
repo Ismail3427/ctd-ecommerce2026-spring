@@ -41,7 +41,8 @@ public class CartService {
 
     @Transactional
     public List<CartModel> getCart(UserIdRequest userIdRequest) {
-        return cartRepo.findCartModelsByUserId(userIdRequest.getUserId());
+        UserModel user = userRepo.findUserModelByUserId(userIdRequest.getUserId());
+        return cartRepo.findCartModelsByUserId(user);
     }
 
     @Transactional
