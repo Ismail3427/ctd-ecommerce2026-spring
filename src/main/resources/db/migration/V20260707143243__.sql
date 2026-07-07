@@ -1,3 +1,13 @@
+CREATE TABLE blogposts
+(
+    id          UUID NOT NULL,
+    title       VARCHAR(255),
+    description VARCHAR(255),
+    addedat     TIMESTAMP WITHOUT TIME ZONE,
+    isactive    BOOLEAN,
+    CONSTRAINT pk_blogposts PRIMARY KEY (id)
+);
+
 CREATE TABLE cart
 (
     id         UUID NOT NULL,

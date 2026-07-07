@@ -9,6 +9,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface CartRepo extends JpaRepository<CartModel, UUID> {
-    @Query("SELECT c FROM cart c WHERE c.userId = :userId ORDER BY c.id ASC")
+    @Query("SELECT c FROM cart c WHERE c.user = :userId ORDER BY c.id ASC")
     List<CartModel> findCartModelsByUserId(@Param("userId") String userId);
 }
