@@ -50,7 +50,7 @@ public class RetailersService {
         RetailersModel retailersModel = new RetailersModel();
         retailersModel.setName(name);
         retailersModel.setAccountId(accountId);
-        retailersModel.setUserId(userId);
+//        retailersModel.setUserId(userId);
         retailersRepo.save(retailersModel);
     }
 

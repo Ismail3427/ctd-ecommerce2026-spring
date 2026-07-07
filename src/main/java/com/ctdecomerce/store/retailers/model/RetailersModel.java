@@ -1,6 +1,7 @@
 package com.ctdecomerce.store.retailers.model;
 
 import com.ctdecomerce.store.product.model.ProductModel;
+import com.ctdecomerce.store.user.model.UserModel;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,8 +29,9 @@ public class RetailersModel {
     @Column(unique = true)
     private String accountId;
 
-    @Column(unique = true, nullable = false)
-    private String userId;
+    @ManyToOne()
+    @JoinColumn()
+    private UserModel user;
 
     @Column()
     private Date dateCreated = new Date();

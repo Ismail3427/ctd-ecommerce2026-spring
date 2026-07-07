@@ -1,6 +1,7 @@
 package com.ctdecomerce.store.cart.model;
 
 import com.ctdecomerce.store.product.model.ProductModel;
+import com.ctdecomerce.store.user.model.UserModel;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,8 +18,9 @@ public class CartModel {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column()
-    private String userId;
+    @ManyToOne()
+    @JoinColumn
+    private UserModel user;
 
     @Column()
     private int quantity = 1;
