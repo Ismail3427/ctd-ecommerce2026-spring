@@ -22,10 +22,6 @@ import java.util.List;
 public class CartController {
     private final CartService cartService;
 
-//    public CartController(CartService cartService) {
-//        this.cartService = cartService;
-//    }
-
     @PostMapping("/add")
     public ResponseEntity<CartModel> addToCart(@RequestBody AddToCart add) {
         return new ResponseEntity<>(cartService.addToCart(add), HttpStatus.CREATED);
