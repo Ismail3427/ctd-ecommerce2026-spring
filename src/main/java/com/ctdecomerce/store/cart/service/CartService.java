@@ -27,7 +27,7 @@ public class CartService {
     @Transactional
     public CartModel addToCart(AddToCart addToCart) {
         CartModel cart = new CartModel();
-        cart.setUserId(addToCart.getUserId());
+//        cart.setUserId(addToCart.getUserId());
         ProductModel product = productRepo.findById(UUID.fromString(addToCart.getProductId())).orElse(null);
         System.out.println(product);
         cart.setProduct(product);
