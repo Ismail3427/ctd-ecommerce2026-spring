@@ -7,6 +7,8 @@ import com.ctdecomerce.store.cart.model.CartModel;
 import com.ctdecomerce.store.cart.repo.CartRepo;
 import com.ctdecomerce.store.product.model.ProductModel;
 import com.ctdecomerce.store.product.repository.ProductRepo;
+import com.ctdecomerce.store.user.model.UserModel;
+import com.ctdecomerce.store.user.repository.UserRepo;
 import com.stripe.model.Product;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -23,13 +25,14 @@ import java.util.UUID;
 public class CartService {
     private final CartRepo cartRepo;
     private final ProductRepo productRepo;
-
+    private final UserRepo userRepo;
 
 
     @Transactional
     public CartModel addToCart(AddToCart addToCart) {
         CartModel cart = new CartModel();
-//        cart.setUserId(addToCart.getUserId());
+        UserModel user = userRepo.findUserModelByUserId(addToCart.getUserId());
+        cart.setUser(user);
         ProductModel product = productRepo.findById(UUID.fromString(addToCart.getProductId())).orElse(null);
         System.out.println(product);
         cart.setProduct(product);

@@ -6,6 +6,8 @@ import com.ctdecomerce.store.retailers.dto.IsRetailer;
 import com.ctdecomerce.store.retailers.dto.UserIdRequest;
 import com.ctdecomerce.store.retailers.model.RetailersModel;
 import com.ctdecomerce.store.retailers.repository.RetailersRepo;
+import com.ctdecomerce.store.user.model.UserModel;
+import com.ctdecomerce.store.user.repository.UserRepo;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Account;
 import com.stripe.model.AccountLink;
@@ -19,9 +21,11 @@ import java.util.NoSuchElementException;
 @Service
 public class RetailersService {
     private final RetailersRepo retailersRepo;
+    private final UserRepo userRepo;
 
-    public RetailersService(RetailersRepo retailersRepo) {
+    public RetailersService(RetailersRepo retailersRepo, UserRepo userRepo) {
         this.retailersRepo = retailersRepo;
+        this.userRepo = userRepo;
     }
 
     @Transactional
@@ -50,7 +54,8 @@ public class RetailersService {
         RetailersModel retailersModel = new RetailersModel();
         retailersModel.setName(name);
         retailersModel.setAccountId(accountId);
-//        retailersModel.setUserId(userId);
+        UserModel user = userRepo.findUserModelByUserId(userId);
+        retailersModel.setUser(user);
         retailersRepo.save(retailersModel);
     }
 
