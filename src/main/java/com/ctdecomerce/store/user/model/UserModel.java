@@ -16,6 +16,9 @@ public class UserModel {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column()
+    private String name;
+
     @Column(unique = true)
     private String userId;
 
