@@ -17,6 +17,7 @@ import com.stripe.model.EventDataObjectDeserializer;
 import com.stripe.model.StripeObject;
 import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,7 @@ import java.util.UUID;
 
 @RestController("RetailersController")
 @RequestMapping("/retailers")
+@Setter
 public class RetailersController {
     private final RetailersService retailersService;
     private final CartRepo cartRepo;

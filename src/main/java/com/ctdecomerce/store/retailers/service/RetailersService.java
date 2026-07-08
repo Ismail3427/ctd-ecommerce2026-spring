@@ -23,6 +23,7 @@ public class RetailersService {
     private final RetailersRepo retailersRepo;
     private final UserRepo userRepo;
 
+
     public RetailersService(RetailersRepo retailersRepo, UserRepo userRepo) {
         this.retailersRepo = retailersRepo;
         this.userRepo = userRepo;
@@ -62,7 +63,8 @@ public class RetailersService {
     @Transactional
     public IsRetailer checkIfRetailer(UserIdRequest userIdRequest) {
         try {
-            var retailer = retailersRepo.findRetailerByUserId(userIdRequest.getUserId());
+            var user = userRepo.findUserModelByUserId(userIdRequest.getUserId());
+            var retailer = retailersRepo.findRetailerByUser(user);
             return new IsRetailer(true);
         } catch (NoSuchElementException e) {
             return new IsRetailer(false);
