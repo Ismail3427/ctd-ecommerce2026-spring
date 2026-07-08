@@ -17,9 +17,6 @@ public class UserModel {
     @Column(name="id")
     private UUID id;
 
-    @Column(name="name")
-    private String name;
-
     @Column(name="user_id",unique = true)
     private String userId;
 
@@ -28,6 +25,9 @@ public class UserModel {
 
     @Column(name="ip_address")
     private String ipAddress;
+
+    @Column()
+    private String name;
 
     @Column(name="logins_count")
     private int loginsCount;
