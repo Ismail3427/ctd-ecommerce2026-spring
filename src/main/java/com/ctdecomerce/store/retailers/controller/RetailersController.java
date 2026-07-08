@@ -17,6 +17,7 @@ import com.stripe.model.EventDataObjectDeserializer;
 import com.stripe.model.StripeObject;
 import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,11 +42,13 @@ public class RetailersController {
         this.userRepo = userRepo;
     }
 
+    @RateLimiter(name = "apiRateLimiter", fallbackMethod = "rateLimiterFallback")
     @PostMapping("/create")
     public ResponseEntity<ConnectedAccountDTO> createAccount(@RequestBody ConnectedAccountRequest connectedAccountRequest) throws StripeException {
         return new ResponseEntity<>(retailersService.createNewRetailer(connectedAccountRequest), HttpStatus.CREATED);
     }
 
+    @RateLimiter(name = "apiRateLimiter", fallbackMethod = "rateLimiterFallback")
     @PostMapping("/webhook")
     public ResponseEntity<String> retailersWebhook(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader) throws StripeException {
         if (sigHeader == null) {
@@ -82,6 +85,10 @@ public class RetailersController {
         }
         return ResponseEntity.status(HttpStatus.OK).
                 body("No event found");
+    }
+
+    public ResponseEntity rateLimiterFallback() {
+        return ResponseEntity.status(429).body("TOO MANY REQUESTS");
     }
 }
 
