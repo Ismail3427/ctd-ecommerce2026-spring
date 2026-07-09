@@ -34,6 +34,7 @@ public class RetailersDashboardController {
         return new ResponseEntity<>(retailersService.findRetailerFromUser(userIdRequest), HttpStatus.OK);
     }
 
-    @PostMapping
+    //@PostMapping()
+
 
 }
