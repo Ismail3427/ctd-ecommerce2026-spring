@@ -49,7 +49,6 @@ public class ProductService {
         for (ProductModel product : allProductsUnfiltered) {
             ProductDTO newProduct = new ProductDTO(product.getId(), product.getName(), product.getOwner());
             filteredProducts.add(newProduct);
-            System.out.println(newProduct);
         }
         return filteredProducts;
     }
