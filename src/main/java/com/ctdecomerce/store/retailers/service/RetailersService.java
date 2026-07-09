@@ -11,10 +11,12 @@ import com.ctdecomerce.store.user.repository.UserRepo;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Account;
 import com.stripe.model.AccountLink;
+import com.stripe.model.Product;
 import com.stripe.param.AccountCreateParams;
 import com.stripe.param.AccountLinkCreateParams;
 import jakarta.transaction.Transactional;
 import lombok.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -80,6 +82,19 @@ public class RetailersService {
         } catch (NoSuchElementException | NullPointerException e) {
             System.out.println("passed and except");
             return new IsRetailer(false);
+        }
+    }
+
+    public RetailersModel findRetailerFromUser(UserIdRequest userIdRequest) {
+        try {
+            var user = userRepo.findUserModelByUserId(userIdRequest.getUserId());
+            var retailer = retailersRepo.findRetailerByUser(user);
+            if (retailer.getUser() == user ) {
+                return retailer;
+            }
+            return null;
+        } catch(NoSuchElementException | NullPointerException e) {
+            return null;
         }
     }
 }

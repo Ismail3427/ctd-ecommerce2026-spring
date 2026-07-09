@@ -23,10 +23,10 @@ public class RetailersModel {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column()
+    @Column(name = "name")
     private String name;
 
-    @Column(unique = true)
+    @Column(unique = true,name = "accountId")
     private String accountId;
 
     @OneToOne()

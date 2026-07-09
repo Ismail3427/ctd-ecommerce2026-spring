@@ -3,6 +3,7 @@ package com.ctdecomerce.store.retailers.controller;
 
 import com.ctdecomerce.store.retailers.dto.UserCheckDto;
 import com.ctdecomerce.store.retailers.dto.UserIdRequest;
+import com.ctdecomerce.store.retailers.model.RetailersModel;
 import com.ctdecomerce.store.retailers.service.RetailersService;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,11 @@ public class RetailersDashboardController {
     @PostMapping()
     public ResponseEntity<IsRetailer> checkIsRetailer(@RequestBody UserIdRequest userIdRequest) {
         return new ResponseEntity<>(retailersService.checkIfRetailer(userIdRequest), HttpStatus.OK);
+    }
+
+    @PostMapping("/findRetailer")
+    public ResponseEntity<RetailersModel> findRetailer(@RequestBody UserIdRequest userIdRequest) {
+        return new ResponseEntity<>(retailersService.findRetailerFromUser(userIdRequest), HttpStatus.OK);
     }
 
 }

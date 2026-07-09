@@ -28,4 +28,8 @@ public class ProductModel {
     @ManyToOne()
     @JoinColumn()
     private RetailersModel owner;
+
+    @ManyToOne()
+    @JoinColumn()
+    private RetailersModel retailer;
 }
