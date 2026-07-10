@@ -5,6 +5,7 @@ import com.ctdecomerce.store.retailers.model.RetailersModel;
 import jakarta.persistence.*;
 import lombok.*;
 
+import javax.xml.stream.Location;
 import java.util.UUID;
 
 @Getter
@@ -32,6 +33,7 @@ public class DeliveryModel {
     @Column()
     private String shippingAddress;
 
-    @Column()
-    private String productAddress;
+    @ManyToOne()
+    @JoinColumn()
+    private LocationModel productStartAddress;
 }

@@ -1,6 +1,7 @@
 package com.ctdecomerce.store.delivery.service;
 
 import com.ctdecomerce.store.delivery.dto.CreateDeliveryDTO;
+import com.ctdecomerce.store.delivery.dto.OrderIdReqeust;
 import com.ctdecomerce.store.delivery.model.DeliveryModel;
 import com.ctdecomerce.store.delivery.repository.DeliveryRepo;
 import com.ctdecomerce.store.orders.model.OrdersModel;
@@ -11,6 +12,9 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Setter
@@ -27,8 +31,14 @@ public class DeliveryService {
         DeliveryModel delivery = new DeliveryModel();
         delivery.setRetailer(retailer);
         delivery.setOrder(order);
-        delivery.setProductAddress("");
         delivery.setShippingAddress("");
         deliveryRepo.save(delivery);
+    }
+
+    @Transactional
+    public DeliveryModel getDeliveryByOrderId(OrderIdReqeust orderIdReqeust) {
+        UUID orderIdUUID = UUID.fromString(orderIdReqeust.getOrderId());
+        OrdersModel order = ordersRepo.findById(orderIdUUID).orElse(null);
+        return deliveryRepo.getDeliveryModelByOrder(order);
     }
 }

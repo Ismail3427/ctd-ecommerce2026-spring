@@ -1,5 +1,6 @@
 package com.ctdecomerce.store.product.model;
 
+import com.ctdecomerce.store.delivery.model.LocationModel;
 import com.ctdecomerce.store.retailers.model.RetailersModel;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -25,6 +26,13 @@ public class ProductModel {
 
     @Column()
     private int priceInCents;
+
+    @Column()
+    private String category;
+
+    @ManyToOne()
+    @JoinColumn()
+    private LocationModel location;
 
     @ManyToOne()
     @JoinColumn()
