@@ -2,6 +2,8 @@ package com.ctdecomerce.store.retailers.controller;
 
 import com.ctdecomerce.store.cart.model.CartModel;
 import com.ctdecomerce.store.cart.repo.CartRepo;
+import com.ctdecomerce.store.delivery.dto.CreateDeliveryDTO;
+import com.ctdecomerce.store.delivery.service.DeliveryService;
 import com.ctdecomerce.store.dto.IdRequest;
 import com.ctdecomerce.store.orders.model.OrdersModel;
 import com.ctdecomerce.store.orders.repository.OrdersRepo;
@@ -40,14 +42,16 @@ public class RetailersController {
     private final CartRepo cartRepo;
     private final UserRepo userRepo;
     private final OrdersRepo ordersRepo;
+    private final DeliveryService deliveryService;
     @Value("${stripe.webhook.secret}")
     private String webhookSecret;
 
-    public RetailersController(RetailersService retailersService, CartRepo cartRepo, UserRepo userRepo, OrdersRepo ordersRepo) {
+    public RetailersController(RetailersService retailersService, CartRepo cartRepo, UserRepo userRepo, OrdersRepo ordersRepo, DeliveryService deliveryService) {
         this.retailersService = retailersService;
         this.cartRepo = cartRepo;
         this.userRepo = userRepo;
         this.ordersRepo = ordersRepo;
+        this.deliveryService = deliveryService;
     }
 
     @PostMapping("/create")
@@ -90,6 +94,7 @@ public class RetailersController {
                     order.setCart(cart);
                     order.setUser(user);
                     ordersRepo.save(order);
+                    deliveryService.createNewDelivery(new CreateDeliveryDTO(order.getId(), order.getCart().getProduct().getOwner().getId()));
                 });
                 return ResponseEntity.status(HttpStatus.OK).body("Complete");
             } else {

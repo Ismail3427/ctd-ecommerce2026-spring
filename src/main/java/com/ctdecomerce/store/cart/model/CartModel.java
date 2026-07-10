@@ -30,8 +30,4 @@ public class CartModel {
 
     @ManyToOne()
     private ProductModel product;
-
-    public boolean getShowing() {
-        return this.showing;
-    }
 }
