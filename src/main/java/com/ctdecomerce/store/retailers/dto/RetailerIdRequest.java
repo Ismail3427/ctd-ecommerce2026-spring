@@ -8,6 +8,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserCheckDto {
-    private String user_id;
+public class RetailerIdRequest {
+    private UUID retailer_id;
 }

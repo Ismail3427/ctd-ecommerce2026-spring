@@ -1,9 +1,11 @@
 package com.ctdecomerce.store.retailers.service;
 
-import com.ctdecomerce.store.retailers.dto.ConnectedAccountDTO;
-import com.ctdecomerce.store.retailers.dto.ConnectedAccountRequest;
-import com.ctdecomerce.store.retailers.dto.IsRetailer;
-import com.ctdecomerce.store.retailers.dto.UserIdRequest;
+import com.ctdecomerce.store.delivery.model.DeliveryModel;
+import com.ctdecomerce.store.delivery.repository.DeliveryRepo;
+import com.ctdecomerce.store.orders.model.OrdersModel;
+import com.ctdecomerce.store.orders.repository.OrdersRepo;
+import com.ctdecomerce.store.retailers.dto.*;
+import com.ctdecomerce.store.retailers.mappers.OrderMapper;
 import com.ctdecomerce.store.retailers.model.RetailersModel;
 import com.ctdecomerce.store.retailers.repository.RetailersRepo;
 import com.ctdecomerce.store.user.model.UserModel;
@@ -19,7 +21,9 @@ import lombok.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 @Service
 @Setter
@@ -28,11 +32,15 @@ import java.util.NoSuchElementException;
 public class RetailersService {
     private final RetailersRepo retailersRepo;
     private final UserRepo userRepo;
-
-
-    public RetailersService(RetailersRepo retailersRepo, UserRepo userRepo) {
+    private final OrdersRepo ordersRepo;
+    private final DeliveryRepo deliveryRepo;
+    private final OrderMapper orderMapper;
+    public RetailersService(RetailersRepo retailersRepo, UserRepo userRepo, OrdersRepo ordersRepo, DeliveryRepo deliveryRepo, OrderMapper orderMapper) {
         this.retailersRepo = retailersRepo;
         this.userRepo = userRepo;
+        this.ordersRepo = ordersRepo;
+        this.deliveryRepo = deliveryRepo;
+        this.orderMapper = orderMapper;
     }
 
     @Transactional
@@ -84,6 +92,9 @@ public class RetailersService {
             return new IsRetailer(false);
         }
     }
+
+
+
     @Transactional
     public RetailersModel findRetailerFromUser(UserIdRequest userIdRequest) {
         try {
@@ -96,5 +107,17 @@ public class RetailersService {
         } catch(NoSuchElementException | NullPointerException e) {
             return null;
         }
+    }
+
+    @Transactional
+    public List<OrderItemDto> findRetailerOrders(RetailerIdRequest retailerIdRequest) {
+        var retailer = retailersRepo.findById(retailerIdRequest.getRetailer_id()).orElseThrow(() -> new RuntimeException("Retailer not Found"));
+        List<DeliveryModel> deliveryModel = deliveryRepo.findByRetailerId(retailer.getId());
+        List<OrderItemDto> orders = deliveryModel.
+                stream()
+                .map(DeliveryModel::getOrder)
+                .map(orderMapper::toDto)
+                .toList();
+        return orders;
     }
 }

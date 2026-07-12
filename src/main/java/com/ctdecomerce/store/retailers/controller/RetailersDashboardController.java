@@ -1,8 +1,10 @@
 package com.ctdecomerce.store.retailers.controller;
 
 
-import com.ctdecomerce.store.retailers.dto.UserCheckDto;
-import com.ctdecomerce.store.retailers.dto.UserIdRequest;
+import com.ctdecomerce.store.delivery.model.DeliveryModel;
+import com.ctdecomerce.store.orders.model.OrdersModel;
+import com.ctdecomerce.store.retailers.dto.*;
+
 import com.ctdecomerce.store.retailers.model.RetailersModel;
 import com.ctdecomerce.store.retailers.service.RetailersService;
 import lombok.Setter;
@@ -12,7 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.ctdecomerce.store.retailers.dto.IsRetailer;
+
+import java.util.List;
 
 @Setter
 @RestController("RetailersDashboardController")
@@ -32,6 +35,12 @@ public class RetailersDashboardController {
     @PostMapping("/find-retailer")
     public ResponseEntity<RetailersModel> findRetailer(@RequestBody UserIdRequest userIdRequest) {
         return new ResponseEntity<>(retailersService.findRetailerFromUser(userIdRequest), HttpStatus.OK);
+    }
+
+    @PostMapping("/get-orders")
+    public List<OrderItemDto> getRetailersOrders(@RequestBody RetailerIdRequest retailerIdRequest) {
+
+        return retailersService.findRetailerOrders(retailerIdRequest);
     }
 
     //@PostMapping()
