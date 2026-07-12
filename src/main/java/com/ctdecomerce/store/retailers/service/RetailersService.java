@@ -113,11 +113,12 @@ public class RetailersService {
     public List<OrderItemDto> findRetailerOrders(RetailerIdRequest retailerIdRequest) {
         var retailer = retailersRepo.findById(retailerIdRequest.getRetailer_id()).orElseThrow(() -> new RuntimeException("Retailer not Found"));
         List<DeliveryModel> deliveryModel = deliveryRepo.findByRetailerId(retailer.getId());
-        List<OrderItemDto> orders = deliveryModel.
+        return deliveryModel.
                 stream()
                 .map(DeliveryModel::getOrder)
                 .map(orderMapper::toDto)
                 .toList();
-        return orders;
     }
+
+    
 }
