@@ -6,7 +6,6 @@ import com.ctdecomerce.store.product.model.ProductModel;
 import com.ctdecomerce.store.product.repository.ProductRepo;
 import com.ctdecomerce.store.retailers.model.RetailersModel;
 import com.ctdecomerce.store.retailers.repository.RetailersRepo;
-import com.stripe.model.Product;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -80,5 +79,30 @@ public class ProductService {
         product.setPriceInCents(editPriceReqDto.getPriceInCents());
         productRepo.save(product);
     }
+
+    @Transactional
+    public void changeProductStock(EditStockReqDto editStockReqDto) {
+        var product = productRepo.findById(editStockReqDto.getProduct_id()).orElseThrow();
+        product.setStock(editStockReqDto.getStock());
+        productRepo.save(product);
+    }
+
+    @Transactional
+    public void changeProductAvailable(EditAvailableReqDto editAvailableReqDto) {
+        var product = productRepo.findById(editAvailableReqDto.getProduct_id()).orElseThrow();
+        product.setAvailable(editAvailableReqDto.isAvailable());
+        productRepo.save(product);
+    }
+
+    @Transactional
+    public void changeProductShowing(EditShowingReqDto editShowingReqDto) {
+        var product = productRepo.findById(editShowingReqDto.getProduct_id()).orElseThrow();
+        product.setShowing(editShowingReqDto.isShowing());
+        productRepo.save(product);
+    }
+
+
+
+
 
 }

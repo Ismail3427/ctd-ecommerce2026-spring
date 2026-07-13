@@ -16,6 +16,8 @@ public interface OrderMapper {
     @Mapping(source = "cart.product.priceInCents", target = "price")
     @Mapping(source = "cart.user.name", target = "userName")
     @Mapping(source = "cart.user.email", target = "email")
+    //@Mapping(source = "isShowing", target = "isShowing")
+    //@Mapping(source = "isAvailable", target = "isAvailable")
 
     OrderItemDto toDto(OrdersModel ordersModel);
 }

@@ -20,5 +20,8 @@ public class OrderItemDto {
         private double price;
         private String userName;
         private String email;
+        private boolean isAvailable;
+        private boolean isShowing;
+        private int stock;
 
 }

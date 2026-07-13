@@ -3,7 +3,9 @@ package com.ctdecomerce.store.product.controller;
 import com.ctdecomerce.store.dto.IdRequest;
 import com.ctdecomerce.store.product.dto.*;
 import com.ctdecomerce.store.product.model.ProductModel;
+import com.ctdecomerce.store.product.service.EditShowingReqDto;
 import com.ctdecomerce.store.product.service.ProductService;
+import com.ctdecomerce.store.retailers.dto.OrderItemDto;
 import com.ctdecomerce.store.retailers.dto.RetailerIdRequest;
 import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
@@ -59,6 +61,23 @@ public class ProductController {
     public void setNewProductName(@RequestBody EditPriceReqDto editPriceReqDto) {
         productService.changeProductPrice(editPriceReqDto);
     }
+
+    @PostMapping("/change-stock")
+    public void getRetailersOrders(@RequestBody EditStockReqDto editStockReqDto) {
+        productService.changeProductStock(editStockReqDto);
+    }
+
+    @PostMapping("/change-available")
+    public void getRetailersOrders(@RequestBody EditAvailableReqDto editAvailableReqDto) {
+        productService.changeProductAvailable(editAvailableReqDto);
+    }
+
+    @PostMapping("/change-showing")
+    public void getRetailersOrders(@RequestBody EditShowingReqDto editShowingReqDto) {
+        productService.changeProductShowing(editShowingReqDto);
+    }
+
+
 
 
 
