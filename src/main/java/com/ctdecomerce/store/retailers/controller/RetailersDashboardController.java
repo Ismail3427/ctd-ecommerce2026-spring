@@ -3,6 +3,8 @@ package com.ctdecomerce.store.retailers.controller;
 
 import com.ctdecomerce.store.delivery.model.DeliveryModel;
 import com.ctdecomerce.store.orders.model.OrdersModel;
+import com.ctdecomerce.store.product.dto.EditNameReqDto;
+import com.ctdecomerce.store.product.model.ProductModel;
 import com.ctdecomerce.store.retailers.dto.*;
 
 import com.ctdecomerce.store.retailers.model.RetailersModel;
@@ -41,6 +43,11 @@ public class RetailersDashboardController {
     public List<OrderItemDto> getRetailersOrders(@RequestBody RetailerIdRequest retailerIdRequest) {
 
         return retailersService.findRetailerOrders(retailerIdRequest);
+    }
+
+    @PostMapping("/change-name")
+    public ProductModel setNewProductName(@RequestBody EditNameReqDto editNameReqDto) {
+        return retailersService.changeProductName(editNameReqDto);
     }
 
     //@PostMapping()

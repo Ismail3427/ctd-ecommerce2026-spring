@@ -4,6 +4,9 @@ import com.ctdecomerce.store.delivery.model.DeliveryModel;
 import com.ctdecomerce.store.delivery.repository.DeliveryRepo;
 import com.ctdecomerce.store.orders.model.OrdersModel;
 import com.ctdecomerce.store.orders.repository.OrdersRepo;
+import com.ctdecomerce.store.product.dto.EditNameReqDto;
+import com.ctdecomerce.store.product.model.ProductModel;
+import com.ctdecomerce.store.product.repository.ProductRepo;
 import com.ctdecomerce.store.retailers.dto.*;
 import com.ctdecomerce.store.retailers.mappers.OrderMapper;
 import com.ctdecomerce.store.retailers.model.RetailersModel;
@@ -35,12 +38,15 @@ public class RetailersService {
     private final OrdersRepo ordersRepo;
     private final DeliveryRepo deliveryRepo;
     private final OrderMapper orderMapper;
-    public RetailersService(RetailersRepo retailersRepo, UserRepo userRepo, OrdersRepo ordersRepo, DeliveryRepo deliveryRepo, OrderMapper orderMapper) {
+    private final ProductRepo productRepo;
+
+    public RetailersService(RetailersRepo retailersRepo, UserRepo userRepo, OrdersRepo ordersRepo, DeliveryRepo deliveryRepo, OrderMapper orderMapper, ProductRepo productRepo) {
         this.retailersRepo = retailersRepo;
         this.userRepo = userRepo;
         this.ordersRepo = ordersRepo;
         this.deliveryRepo = deliveryRepo;
         this.orderMapper = orderMapper;
+        this.productRepo = productRepo;
     }
 
     @Transactional
@@ -120,5 +126,10 @@ public class RetailersService {
                 .toList();
     }
 
-    
+    @Transactional
+    public ProductModel changeProductName(EditNameReqDto editNameReqDto) {
+        var product = productRepo.findById(editNameReqDto.getProduct_id()).orElseThrow();
+        product.setName(editNameReqDto.getName());
+        return productRepo.save(product);
+    }
 }
