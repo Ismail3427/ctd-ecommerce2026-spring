@@ -2,9 +2,11 @@ package com.ctdecomerce.store.product.controller;
 
 import com.ctdecomerce.store.dto.IdRequest;
 import com.ctdecomerce.store.product.dto.CreateProductDTO;
+import com.ctdecomerce.store.product.dto.EditNameReqDto;
 import com.ctdecomerce.store.product.dto.ProductDTO;
 import com.ctdecomerce.store.product.model.ProductModel;
 import com.ctdecomerce.store.product.service.ProductService;
+import com.ctdecomerce.store.retailers.dto.RetailerIdRequest;
 import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import org.springframework.http.HttpStatus;
@@ -23,7 +25,7 @@ public class ProductController {
     }
 
     @RateLimiter(name = "apiRateLimiter", fallbackMethod = "rateLimiterFallback")
-    @PostMapping("/create")
+    @PostMapping("/create-product")
     public ResponseEntity<ProductModel> createProduct(@RequestBody CreateProductDTO createProductDTO) {
         return new ResponseEntity<>(productService.createProduct(createProductDTO), HttpStatus.CREATED);
     }
@@ -44,4 +46,10 @@ public class ProductController {
     public ResponseEntity<String> rateLimiterFallback(RequestNotPermitted exception) {
         return ResponseEntity.status(429).body("TOO MANY REQUESTS");
     }
+
+    @PostMapping("/change-name")
+    public ProductModel setNewProductName(@RequestBody EditNameReqDto editNameReqDto) {
+        return productService.changeProductName(editNameReqDto);
+    }
+
 }

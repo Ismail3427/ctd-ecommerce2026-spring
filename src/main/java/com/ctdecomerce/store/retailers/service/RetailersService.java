@@ -126,10 +126,4 @@ public class RetailersService {
                 .toList();
     }
 
-    @Transactional
-    public ProductModel changeProductName(EditNameReqDto editNameReqDto) {
-        var product = productRepo.findById(editNameReqDto.getProduct_id()).orElseThrow();
-        product.setName(editNameReqDto.getName());
-        return productRepo.save(product);
-    }
 }

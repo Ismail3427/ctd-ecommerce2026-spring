@@ -39,16 +39,15 @@ public class RetailersDashboardController {
         return new ResponseEntity<>(retailersService.findRetailerFromUser(userIdRequest), HttpStatus.OK);
     }
 
+
+
     @PostMapping("/get-orders")
     public List<OrderItemDto> getRetailersOrders(@RequestBody RetailerIdRequest retailerIdRequest) {
 
         return retailersService.findRetailerOrders(retailerIdRequest);
     }
 
-    @PostMapping("/change-name")
-    public ProductModel setNewProductName(@RequestBody EditNameReqDto editNameReqDto) {
-        return retailersService.changeProductName(editNameReqDto);
-    }
+
 
     //@PostMapping()
 

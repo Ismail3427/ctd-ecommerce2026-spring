@@ -2,6 +2,7 @@ package com.ctdecomerce.store.product.service;
 
 import com.ctdecomerce.store.dto.IdRequest;
 import com.ctdecomerce.store.product.dto.CreateProductDTO;
+import com.ctdecomerce.store.product.dto.EditNameReqDto;
 import com.ctdecomerce.store.product.dto.OwnerDTO;
 import com.ctdecomerce.store.product.dto.ProductDTO;
 import com.ctdecomerce.store.product.model.ProductModel;
@@ -36,6 +37,14 @@ public class ProductService {
         productModel.setOwner(retailersModel);
         productRepo.save(productModel);
         return productModel;
+    }
+
+
+    @Transactional
+    public ProductModel changeProductName(EditNameReqDto editNameReqDto) {
+        var product = productRepo.findById(editNameReqDto.getProduct_id()).orElseThrow();
+        product.setName(editNameReqDto.getName());
+        return productRepo.save(product);
     }
 
 //    @Transactional

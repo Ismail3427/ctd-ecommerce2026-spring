@@ -27,8 +27,7 @@ public class ProductModel {
     @Column()
     private int priceInCents;
 
-    @Column()
-    private String category;
+
 
     @ManyToOne()
     @JoinColumn()
