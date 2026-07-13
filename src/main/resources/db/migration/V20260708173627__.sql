@@ -1,2 +1,0 @@
-ALTER TABLE orders
-    ADD timestamp TIMESTAMP WITHOUT TIME ZONE;

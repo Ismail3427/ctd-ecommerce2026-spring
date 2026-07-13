@@ -1,3 +1,0 @@
-ALTER TABLE cart
-DROP
-COLUMN showing;
