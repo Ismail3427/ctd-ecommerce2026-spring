@@ -4,6 +4,8 @@ import com.ctdecomerce.store.cart.model.CartModel;
 import com.ctdecomerce.store.cart.repo.CartRepo;
 import com.ctdecomerce.store.delivery.dto.CreateDeliveryDTO;
 import com.ctdecomerce.store.delivery.service.DeliveryService;
+import com.ctdecomerce.store.discounts.model.DiscountsModel;
+import com.ctdecomerce.store.discounts.repository.DiscountsRepo;
 import com.ctdecomerce.store.dto.IdRequest;
 import com.ctdecomerce.store.orders.model.OrdersModel;
 import com.ctdecomerce.store.orders.repository.OrdersRepo;
@@ -42,15 +44,17 @@ public class RetailersController {
     private final UserRepo userRepo;
     private final OrdersRepo ordersRepo;
     private final DeliveryService deliveryService;
+    private final DiscountsRepo discountsRepo;
     @Value("${stripe.webhook.secret}")
     private String webhookSecret;
 
-    public RetailersController(RetailersService retailersService, CartRepo cartRepo, UserRepo userRepo, OrdersRepo ordersRepo, DeliveryService deliveryService) {
+    public RetailersController(RetailersService retailersService, CartRepo cartRepo, UserRepo userRepo, OrdersRepo ordersRepo, DeliveryService deliveryService, DiscountsRepo discountsRepo) {
         this.retailersService = retailersService;
         this.cartRepo = cartRepo;
         this.userRepo = userRepo;
         this.ordersRepo = ordersRepo;
         this.deliveryService = deliveryService;
+        this.discountsRepo = discountsRepo;
     }
 
     @PostMapping("/create")
@@ -95,12 +99,14 @@ public class RetailersController {
                     cartRepo.save(cart);
                     OrdersModel order = new OrdersModel();
                     order.setCart(cart);
+                    DiscountsModel discount = discountsRepo.findDiscountsModelByProduct(cart.getProduct());
+                    double finalPrice = (cart.getProduct().getPriceInCents() - (cart.getProduct().getPriceInCents() * discount.getOffer())) * cart.getQuantity();
                     order.setUser(user);
                     ordersRepo.save(order);
                     deliveryService.createNewDelivery(new CreateDeliveryDTO(order.getId(), order.getCart().getProduct().getOwner().getId()));
                     try {
                         TransferCreateParams transferParams = TransferCreateParams.builder()
-                                .setAmount((long) cart.getProduct().getPriceInCents())
+                                .setAmount((long) finalPrice)
                                 .setCurrency("usd")
                                 .setDestination(cart.getProduct().getOwner().getAccountId())
                                 .setSourceTransaction(chargId)
