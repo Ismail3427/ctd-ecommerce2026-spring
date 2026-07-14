@@ -70,7 +70,7 @@ public class DiscountsService {
     @Transactional
     public DiscountsModel changeOffer(ChangeOffer changeOffer) {
         DiscountsModel discount = discountsRepo.findById(UUID.fromString(changeOffer.getId())).orElse(null);
-        discount.setOffer(changeOffer().getName());
+        discount.setOffer(changeOffer.getOffer());
         discountsRepo.save(discount);
         return discount;
     }

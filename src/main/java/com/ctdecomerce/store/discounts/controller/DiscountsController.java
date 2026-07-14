@@ -48,4 +48,9 @@ public class DiscountsController {
     public ResponseEntity<DiscountsModel> changeName(@RequestBody ChangeName changeName) {
         return new ResponseEntity<>(discountsService.changeName(changeName), HttpStatus.OK);
     }
+
+    @PostMapping("/change/offer")
+    public ResponseEntity<DiscountsModel> changeOffer(@RequestBody ChangeOffer changeOffer) {
+        return new ResponseEntity<>(discountsService.changeOffer(changeOffer), HttpStatus.OK);
+    }
 }
