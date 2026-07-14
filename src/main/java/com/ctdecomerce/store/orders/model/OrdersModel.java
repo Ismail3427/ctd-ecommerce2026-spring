@@ -24,6 +24,9 @@ public class OrdersModel {
     @JoinColumn()
     private UserModel user;
 
+    @Column()
+    private int finalPriceInCents;
+
     @OneToOne()
     @JoinTable(
             name = "orders_cart",

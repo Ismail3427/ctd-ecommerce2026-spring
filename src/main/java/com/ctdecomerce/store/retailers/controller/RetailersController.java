@@ -109,6 +109,7 @@ public class RetailersController {
                     if (discount != null) {
                         double finalPrice = (cart.getProduct().getPriceInCents() - (cart.getProduct().getPriceInCents() * discount.getOffer())) * cart.getQuantity();
                         order.setUser(user);
+                        order.setFinalPriceInCents((int) finalPrice);
                         ordersRepo.save(order);
                         deliveryService.createNewDelivery(new CreateDeliveryDTO(order.getId(), order.getCart().getProduct().getOwner().getId()));
                         try {
@@ -127,6 +128,7 @@ public class RetailersController {
                         double finalPrice = cart.getProduct().getPriceInCents() * cart.getQuantity();
                         order.setUser(user);
                         ordersRepo.save(order);
+                        order.setFinalPriceInCents((int) finalPrice);
                         deliveryService.createNewDelivery(new CreateDeliveryDTO(order.getId(), order.getCart().getProduct().getOwner().getId()));
                         try {
                             TransferCreateParams transferParams = TransferCreateParams.builder()
