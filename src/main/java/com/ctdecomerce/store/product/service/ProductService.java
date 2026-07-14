@@ -36,7 +36,7 @@ public class ProductService {
         productModel.setShowing(createProductDTO.isShowing());
         productModel.setAvailable(createProductDTO.isAvailable());
         productModel.setStock(createProductDTO.getStock());
-        RetailersModel retailersModel = retailersRepo.findById(UUID.fromString(createProductDTO.getUserId())).orElse(null);
+        RetailersModel retailersModel = retailersRepo.findById(UUID.fromString(createProductDTO.getOwnerId())).orElse(null);
         productModel.setOwner(retailersModel);
         productRepo.save(productModel);
         return productModel;

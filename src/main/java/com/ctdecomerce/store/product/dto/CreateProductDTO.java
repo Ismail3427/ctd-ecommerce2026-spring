@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -18,7 +19,7 @@ public class CreateProductDTO {
     private int stock;
     private boolean isAvailable;
     private boolean isShowing;
-    private String userId;
-    private List<String> categoryId;
+    private String ownerId;
+
 
 }
