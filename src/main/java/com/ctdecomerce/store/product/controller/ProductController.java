@@ -5,6 +5,7 @@ import com.ctdecomerce.store.product.dto.*;
 import com.ctdecomerce.store.product.model.ProductModel;
 import com.ctdecomerce.store.product.dto.EditShowingReqDto;
 import com.ctdecomerce.store.product.service.ProductService;
+import com.ctdecomerce.store.retailers.dto.ProductIdRequest;
 import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import org.springframework.http.HttpStatus;
@@ -75,6 +76,10 @@ public class ProductController {
         productService.changeProductShowing(editShowingReqDto);
     }
 
+    @PostMapping("/delete-product")
+    public void deleteRetailerProduct(@RequestBody ProductIdRequest productIdRequest) {
+        productService.deleteRetailerProduct(productIdRequest);
+    }
 
 
 
