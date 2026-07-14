@@ -133,5 +133,9 @@ public class ProductService {
         return productRepo.findById(productIdRequest.getProductId()).orElseThrow();
     }
 
+    @Transactional
+    public void deleteRetailerProduct(ProductIdRequest productIdRequest) {
+        productRepo.deleteById(productIdRequest.getProductId());
+    }
 
 }
