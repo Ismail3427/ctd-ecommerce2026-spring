@@ -33,8 +33,8 @@ public class ProductService {
         productModel.setName(createProductDTO.getName());
         productModel.setDescription(createProductDTO.getDescription());
         productModel.setPriceInCents(createProductDTO.getPriceInCents());
-        productModel.setShowing(createProductDTO.isShowing());
-        productModel.setAvailable(createProductDTO.isAvailable());
+        productModel.setShowing(createProductDTO.getIsShowing());
+        productModel.setAvailable(createProductDTO.getIsAvailable());
         productModel.setStock(createProductDTO.getStock());
         RetailersModel retailersModel = retailersRepo.findById(UUID.fromString(createProductDTO.getOwnerId())).orElse(null);
         productModel.setOwner(retailersModel);

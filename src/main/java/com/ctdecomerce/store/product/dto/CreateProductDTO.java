@@ -11,14 +11,14 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+
 public class CreateProductDTO {
     private String name;
     private String description;
     private int priceInCents;
     private int stock;
-    private boolean isAvailable;
-    private boolean isShowing;
+    private Boolean isAvailable;
+    private Boolean isShowing;
     private String ownerId;
 
 
