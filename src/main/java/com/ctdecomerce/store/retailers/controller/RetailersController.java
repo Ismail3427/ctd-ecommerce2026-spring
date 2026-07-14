@@ -104,6 +104,7 @@ public class RetailersController {
                                 .setCurrency("usd")
                                 .setDestination(cart.getProduct().getOwner().getAccountId())
                                 .setSourceTransaction(chargId)
+                                .setDescription("Transfer to merchant account")
                                 .build();
                         Transfer transfer = Transfer.create(transferParams);
                     } catch (StripeException e) {
