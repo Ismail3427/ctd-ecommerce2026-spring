@@ -119,5 +119,4 @@ public class RetailersService {
         List<DeliveryModel> deliveryModel = deliveryRepo.findByRetailerId(retailer.getId());
         return deliveryModel;
     }
-
 }
