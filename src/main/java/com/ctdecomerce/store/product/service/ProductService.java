@@ -135,6 +135,7 @@ public class ProductService {
 
     @Transactional
     public void deleteRetailerProduct(ProductIdRequest productIdRequest) {
+        discountsRepo.deleteAllByProductId(productIdRequest.getProductId());
         productRepo.deleteById(productIdRequest.getProductId());
     }
 
