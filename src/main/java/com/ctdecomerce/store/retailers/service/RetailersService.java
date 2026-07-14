@@ -22,6 +22,7 @@ import com.stripe.param.AccountLinkCreateParams;
 import com.stripe.param.AccountLoginLinkCreateParams;
 import jakarta.transaction.Transactional;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +31,7 @@ import java.util.NoSuchElementException;
 @Service
 @Setter
 @ToString
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RetailersService {
     private final RetailersRepo retailersRepo;
     private final UserRepo userRepo;
@@ -39,7 +40,8 @@ public class RetailersService {
     private final OrderMapper orderMapper;
     private final ProductRepo productRepo;
     private StripeClient stripeClient;
-
+    @Value("${frontend.url}")
+    String url;
 
     @Transactional
     public LoginLinkRes generateLoginLink(AcctIdRequest acctIdRequest) throws StripeException {
