@@ -100,22 +100,42 @@ public class RetailersController {
                     OrdersModel order = new OrdersModel();
                     order.setCart(cart);
                     DiscountsModel discount = discountsRepo.findDiscountsModelByProduct(cart.getProduct());
-                    double finalPrice = (cart.getProduct().getPriceInCents() - (cart.getProduct().getPriceInCents() * discount.getOffer())) * cart.getQuantity();
-                    order.setUser(user);
-                    ordersRepo.save(order);
-                    deliveryService.createNewDelivery(new CreateDeliveryDTO(order.getId(), order.getCart().getProduct().getOwner().getId()));
-                    try {
-                        TransferCreateParams transferParams = TransferCreateParams.builder()
-                                .setAmount((long) finalPrice)
-                                .setCurrency("usd")
-                                .setDestination(cart.getProduct().getOwner().getAccountId())
-                                .setSourceTransaction(chargId)
-                                .setDescription("Transfer to merchant account")
-                                .build();
-                        Transfer transfer = Transfer.create(transferParams);
-                    } catch (StripeException e) {
-                        throw new RuntimeException(e);
+                    if (discount != null) {
+                        double finalPrice = (cart.getProduct().getPriceInCents() - (cart.getProduct().getPriceInCents() * discount.getOffer())) * cart.getQuantity();
+                        order.setUser(user);
+                        ordersRepo.save(order);
+                        deliveryService.createNewDelivery(new CreateDeliveryDTO(order.getId(), order.getCart().getProduct().getOwner().getId()));
+                        try {
+                            TransferCreateParams transferParams = TransferCreateParams.builder()
+                                    .setAmount((long) finalPrice)
+                                    .setCurrency("usd")
+                                    .setDestination(cart.getProduct().getOwner().getAccountId())
+                                    .setSourceTransaction(chargId)
+                                    .setDescription("Transfer to merchant account")
+                                    .build();
+                            Transfer transfer = Transfer.create(transferParams);
+                        } catch (StripeException e) {
+                            throw new RuntimeException(e);
+                        }
+                    } else {
+                        double finalPrice = cart.getProduct().getPriceInCents() * cart.getQuantity();
+                        order.setUser(user);
+                        ordersRepo.save(order);
+                        deliveryService.createNewDelivery(new CreateDeliveryDTO(order.getId(), order.getCart().getProduct().getOwner().getId()));
+                        try {
+                            TransferCreateParams transferParams = TransferCreateParams.builder()
+                                    .setAmount((long) finalPrice)
+                                    .setCurrency("usd")
+                                    .setDestination(cart.getProduct().getOwner().getAccountId())
+                                    .setSourceTransaction(chargId)
+                                    .setDescription("Transfer to merchant account")
+                                    .build();
+                            Transfer transfer = Transfer.create(transferParams);
+                        } catch (StripeException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
+
                 });
                 return ResponseEntity.status(HttpStatus.OK).body("Complete");
             } else {
