@@ -16,4 +16,5 @@ public class ProductDTO {
     private double priceInCents;
     private boolean discounted;
     private double ogPriceInCents;
+    private int stock;
 }
