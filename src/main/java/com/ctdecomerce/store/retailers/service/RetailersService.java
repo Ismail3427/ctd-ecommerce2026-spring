@@ -60,8 +60,8 @@ public class RetailersService {
 
         AccountLinkCreateParams accountLinkCreateParams = AccountLinkCreateParams.builder()
                 .setAccount(account.getId())
-                .setRefreshUrl("http://localhost:3000")
-                .setReturnUrl("http://localhost:3000")
+                .setRefreshUrl("https://ctdecommerce2026.vercel.app")
+                .setReturnUrl("https://ctdecommerce2026.vercel.app")
                 .setType(AccountLinkCreateParams.Type.ACCOUNT_ONBOARDING)
                 .build();
 
