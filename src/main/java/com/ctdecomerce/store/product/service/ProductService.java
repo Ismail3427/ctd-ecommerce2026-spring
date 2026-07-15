@@ -60,20 +60,12 @@ public class ProductService {
             DiscountsModel discounts = discountsRepo.findDiscountsModelByProduct(product);
             if (discounts != null) {
                 double productOgPrice = ((double) product.getPriceInCents() / 100) * (1 - discounts.getOffer()) * 100;
-<<<<<<< HEAD
                 ProductDTO newProduct = new ProductDTO(product.getId(), product.getName(), owner, (int) productOgPrice, true, product.getPriceInCents(), product.isShowing(), product.isAvailable());
-=======
-                ProductDTO newProduct = new ProductDTO(product.getId(), product.getName(), owner, (int) productOgPrice, true, product.getPriceInCents(), product.getStock());
->>>>>>> e857963de0bce7de6f17dac3f95fd955ab9f7a24
                 if (product.getStock() > 0) {
                     filteredProducts.add(newProduct);
                 }
             } else {
-<<<<<<< HEAD
                 ProductDTO newProduct = new ProductDTO(product.getId(), product.getName(), owner, product.getPriceInCents(), false, product.getPriceInCents(), product.isShowing(), product.isAvailable());
-=======
-                ProductDTO newProduct = new ProductDTO(product.getId(), product.getName(), owner, product.getPriceInCents(), false, product.getPriceInCents(), product.getStock());
->>>>>>> e857963de0bce7de6f17dac3f95fd955ab9f7a24
                 if (product.getStock() > 0) {
                     filteredProducts.add(newProduct);
                 }
@@ -83,15 +75,8 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductDTO getProductById(IdRequest idRequest) {
-        ProductModel product = productRepo.findById(UUID.fromString(idRequest.getId())).orElse(null);
-        DiscountsModel discount = discountsRepo.findDiscountsModelByProduct(product);
-        OwnerDTO owner = new OwnerDTO(product.getOwner().getId(), product.getOwner().getName());
-        if (discount == null) {
-            return new ProductDTO(product.getId(), product.getName(), owner, product.getPriceInCents(), false, product.getPriceInCents(), product.getStock());
-        } else {
-            return new ProductDTO(product.getId(), product.getName(), owner, (product.getPriceInCents() - product.getPriceInCents() * discount.getOffer()), true, product.getPriceInCents(), product.getStock());
-        }
+    public ProductModel getProductById(IdRequest idRequest) {
+        return productRepo.findById(UUID.fromString(idRequest.getId())).orElse(null);
     }
 
     @Transactional
