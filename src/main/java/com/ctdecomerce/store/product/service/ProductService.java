@@ -56,19 +56,20 @@ public class ProductService {
         List<ProductModel> allProductsUnfiltered = productRepo.findAll();
         List<ProductDTO> filteredProducts = new ArrayList<>();
         for (ProductModel product : allProductsUnfiltered) {
+            if (product.getStock() <= 0) {
+                product.setAvailable(false);
+                productRepo.save(product);
+            }
             OwnerDTO owner = new OwnerDTO(product.getOwner().getId(), product.getOwner().getName());
             DiscountsModel discounts = discountsRepo.findDiscountsModelByProduct(product);
             if (discounts != null) {
                 double productOgPrice = ((double) product.getPriceInCents() / 100) * (1 - discounts.getOffer()) * 100;
                 ProductDTO newProduct = new ProductDTO(product.getId(), product.getName(), owner, (int) productOgPrice, true, product.getPriceInCents(), product.isShowing(), product.isAvailable(), product.getStock());
-                if (product.getStock() > 0) {
-                    filteredProducts.add(newProduct);
-                }
+                filteredProducts.add(newProduct);
             } else {
-                ProductDTO newProduct = new ProductDTO(product.getId(), product.getName(), owner, product.getPriceInCents(), false, product.getPriceInCents(), product.isShowing(), product.isAvailable(), product.getStock());
-                if (product.getStock() > 0) {
-                    filteredProducts.add(newProduct);
-                }
+                ProductDTO newProduct = new ProductDTO(product.getId(), product.getName(), owner, product.getPriceInCents(), false, product.getPriceInCents(), product.isShowing(), product.isAvailable(),product.getStock());
+
+                filteredProducts.add(newProduct);
             }
         }
         return filteredProducts;
@@ -79,13 +80,23 @@ public class ProductService {
         ProductModel product = productRepo.findById(UUID.fromString(idRequest.getId())).orElse(null);
         DiscountsModel discount = discountsRepo.findDiscountsModelByProduct(product);
         if (discount != null) {
+
             assert product != null;
+            if (product.getStock() <= 0) {
+                product.setAvailable(false);
+                productRepo.save(product);
+            }
             double finalPrice = product.getPriceInCents() - (product.getPriceInCents() * discount.getOffer());
             OwnerDTO owner = new OwnerDTO(product.getOwner().getId(), product.getOwner().getName());
             ProductDTO productDTO = new ProductDTO(product.getId(), product.getName(), owner, finalPrice, true, product.getPriceInCents(), product.isShowing(), product.isAvailable(), product.getStock());
             return productDTO;
         } else {
+
             assert product != null;
+            if (product.getStock() <= 0) {
+                product.setAvailable(false);
+                productRepo.save(product);
+            }
             OwnerDTO owner = new OwnerDTO(product.getOwner().getId(), product.getOwner().getName());
             ProductDTO productDTO = new ProductDTO(product.getId(), product.getName(), owner, product.getPriceInCents(), false, product.getPriceInCents(), product.isShowing(), product.isAvailable(), product.getStock());
             return productDTO;
