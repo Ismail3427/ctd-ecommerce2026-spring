@@ -60,12 +60,12 @@ public class ProductService {
             DiscountsModel discounts = discountsRepo.findDiscountsModelByProduct(product);
             if (discounts != null) {
                 double productOgPrice = ((double) product.getPriceInCents() / 100) * (1 - discounts.getOffer()) * 100;
-                ProductDTO newProduct = new ProductDTO(product.getId(), product.getName(), owner, (int) productOgPrice, true, product.getPriceInCents(), product.isShowing(), product.isAvailable());
+                ProductDTO newProduct = new ProductDTO(product.getId(), product.getName(), owner, (int) productOgPrice, true, product.getPriceInCents(), product.isShowing(), product.isAvailable(), product.getStock());
                 if (product.getStock() > 0) {
                     filteredProducts.add(newProduct);
                 }
             } else {
-                ProductDTO newProduct = new ProductDTO(product.getId(), product.getName(), owner, product.getPriceInCents(), false, product.getPriceInCents(), product.isShowing(), product.isAvailable());
+                ProductDTO newProduct = new ProductDTO(product.getId(), product.getName(), owner, product.getPriceInCents(), false, product.getPriceInCents(), product.isShowing(), product.isAvailable(), product.getStock());
                 if (product.getStock() > 0) {
                     filteredProducts.add(newProduct);
                 }
@@ -82,12 +82,12 @@ public class ProductService {
             assert product != null;
             double finalPrice = product.getPriceInCents() - (product.getPriceInCents() * discount.getOffer());
             OwnerDTO owner = new OwnerDTO(product.getOwner().getId(), product.getOwner().getName());
-            ProductDTO productDTO = new ProductDTO(product.getId(), product.getName(), owner, finalPrice, true, product.getPriceInCents(), product.isShowing(), product.isAvailable());
+            ProductDTO productDTO = new ProductDTO(product.getId(), product.getName(), owner, finalPrice, true, product.getPriceInCents(), product.isShowing(), product.isAvailable(), product.getStock());
             return productDTO;
         } else {
             assert product != null;
             OwnerDTO owner = new OwnerDTO(product.getOwner().getId(), product.getOwner().getName());
-            ProductDTO productDTO = new ProductDTO(product.getId(), product.getName(), owner, product.getPriceInCents(), false, product.getPriceInCents(), product.isShowing(), product.isAvailable());
+            ProductDTO productDTO = new ProductDTO(product.getId(), product.getName(), owner, product.getPriceInCents(), false, product.getPriceInCents(), product.isShowing(), product.isAvailable(), product.getStock());
             return productDTO;
         }
     }

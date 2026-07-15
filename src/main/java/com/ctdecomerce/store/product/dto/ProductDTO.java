@@ -18,4 +18,5 @@ public class ProductDTO {
     private double ogPriceInCents;
     private boolean isShowing;
     private boolean isAvailable;
+    private int stock;
 }
