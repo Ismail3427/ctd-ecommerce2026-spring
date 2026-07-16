@@ -116,8 +116,7 @@ public class RetailersService {
     @Transactional
     public List<DeliveryModel> findRetailerOrders(RetailerIdRequest retailerIdRequest) {
         var retailer = retailersRepo.findById(retailerIdRequest.getRetailer_id()).orElseThrow(() -> new RuntimeException("Retailer not Found"));
-        List<DeliveryModel> deliveryModel = deliveryRepo.findByRetailerId(retailer.getId());
-        return deliveryModel;
+        return deliveryRepo.findByRetailerId(retailer.getId());
     }
 
 }
