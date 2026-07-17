@@ -19,4 +19,5 @@ public class ProductDTO {
     private boolean isShowing;
     private boolean isAvailable;
     private int stock;
+    private String description;
 }

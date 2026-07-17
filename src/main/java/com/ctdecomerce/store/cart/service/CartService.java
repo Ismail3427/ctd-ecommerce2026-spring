@@ -83,9 +83,9 @@ public class CartService {
             DiscountsModel discounts = discountsRepo.findDiscountsModelByProduct(product);
             if (discounts != null) {
                 double productOgPrice = ((double) product.getPriceInCents() / 100) * (1 - discounts.getOffer()) * 100;
-                productFinal = new ProductDTO(product.getId(), product.getName(), owner, (int) productOgPrice, true, product.getPriceInCents(), product.isShowing(), product.isAvailable(), product.getStock());
+                productFinal = new ProductDTO(product.getId(), product.getName(), owner, (int) productOgPrice, true, product.getPriceInCents(), product.isShowing(), product.isAvailable(), product.getStock(), product.getDescription());
             } else {
-                productFinal = new ProductDTO(product.getId(), product.getName(), owner, product.getPriceInCents(), false, product.getPriceInCents(),product.isShowing(),product.isAvailable(), product.getStock());
+                productFinal = new ProductDTO(product.getId(), product.getName(), owner, product.getPriceInCents(), false, product.getPriceInCents(),product.isShowing(),product.isAvailable(), product.getStock(), product.getDescription());
             }
             CartDTO cartDeserialized = new CartDTO(cart.getId(), cart.isShowing(), cart.getQuantity(), productFinal, carts.getFirst().getUser().getUserId());
             deserializedCarts.add(cartDeserialized);
