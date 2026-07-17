@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController("RetailersController")
-@RequestMapping("/retailers")
+@RequestMapping(path = {"/retailers", ""})
 @Setter
 public class RetailersController {
     private final RetailersService retailersService;
@@ -47,8 +47,10 @@ public class RetailersController {
     private final DeliveryService deliveryService;
     private final DiscountsRepo discountsRepo;
     private final ProductRepo productRepo;
-    @Value("${stripe.webhook.secret}")
+    @Value("${stripe.webhook.secret:}")
     private String webhookSecret;
+    @Value("${w2:}")
+    private String webhooks2;
 
     public RetailersController(RetailersService retailersService, CartRepo cartRepo, UserRepo userRepo, OrdersRepo ordersRepo, DeliveryService deliveryService, DiscountsRepo discountsRepo, ProductRepo productRepo) {
         this.retailersService = retailersService;
@@ -65,25 +67,21 @@ public class RetailersController {
         return new ResponseEntity<>(retailersService.createNewRetailer(connectedAccountRequest), HttpStatus.CREATED);
     }
 
-    @PostMapping("/webhook")
-    public ResponseEntity<String> retailersWebhook(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader) throws StripeException {
+    @PostMapping({"/retailers/webhook-checkout", "/retailers/webhook/checkout", "/webhook-checkout", "/webhook/checkout"})
+    public ResponseEntity<String> checkoutWebhook(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader) throws StripeException {
         if (sigHeader == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("BAD REQUEST MISSING WEBHOOK SIGNITURE");
         }
 
         Event event;
         try {
-            event = Webhook.constructEvent(payload, sigHeader, webhookSecret);
+            event = Webhook.constructEvent(payload, sigHeader, resolveWebhookSecret(webhookSecret));
         } catch (SignatureVerificationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Signature verification failed");
-        }
-        if ("account.updated".equals(event.getType())) {
-            Account account = Account.retrieve(event.getAccount());
-            if (account.getChargesEnabled()) {
-                Map<String, String> metadata = account.getMetadata();
-                retailersService.createAccountToDB(metadata.get("name"), account.getId(), metadata.get("userId"));
-                return ResponseEntity.status(HttpStatus.OK).body("Success");
-            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Signature verification failed");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Signature verification failed");
         }
         if ("checkout.session.completed".equals(event.getType())) {
             EventDataObjectDeserializer dataObjectDeserializer = event.getDataObjectDeserializer();
@@ -153,6 +151,41 @@ public class RetailersController {
         }
         return ResponseEntity.status(HttpStatus.OK).
                 body("No event found");
+    }
+
+    private String resolveWebhookSecret(String configuredSecret) {
+        if (configuredSecret != null && !configuredSecret.isBlank()) {
+            return configuredSecret;
+        }
+        return webhookSecret;
+    }
+
+    @PostMapping({"/retailers/webhook-retailer", "/retailers/webhook/retailer", "/webhook-retailer", "/webhook/retailer"})
+    public ResponseEntity<String> retailersWebhook(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader) throws StripeException {
+
+        if (sigHeader == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("BAD REQUEST MISSING WEBHOOK SIGNITURE");
+        }
+
+        Event event;
+        try {
+            event = Webhook.constructEvent(payload, sigHeader, resolveWebhookSecret(webhooks2));
+        } catch (SignatureVerificationException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Signature verification failed");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Signature verification failed");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Signature verification failed");
+        }
+        if ("account.updated".equals(event.getType())) {
+            Account account = Account.retrieve(event.getAccount());
+            if (account.getChargesEnabled()) {
+                Map<String, String> metadata = account.getMetadata();
+                retailersService.createAccountToDB(metadata.get("name"), account.getId(), metadata.get("userId"));
+                return ResponseEntity.status(HttpStatus.OK).body("Success");
+            }
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("No event");
     }
 }
 
